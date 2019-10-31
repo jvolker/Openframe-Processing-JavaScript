@@ -1,0 +1,43 @@
+{
+  "name": "openframe-processing-javascript",
+  "version": "0.0.0",
+  "description": "Openframe extension which adds support for JavaScript flavoured Processing",
+  "main": "extension.js",
+  "scripts": {
+    "install": "./install.sh",
+    "unistall": "./unistall.sh",
+    "lint": "./node_modules/.bin/eslint extension.js test/**",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "test": "npm run lint && ./node_modules/.bin/nyc ./node_modules/.bin/_mocha",
+    "test-coveralls": "npm run lint && ./node_modules/.bin/nyc ./node_modules/.bin/_mocha --report lcovonly -- -R spec && npm run coveralls"
+  },
+  "keywords": [
+    "openframe",
+    "processing.js",
+    "p5.js",
+    "Openprocessing",
+    "art"
+  ],
+  "author": {
+    "name": "Jeremias Volker",
+    "url": "http://jeremiasvolker.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "coveralls": "^3.0.7",
+    "eslint": "^4.0.0",
+    "nyc": "^14.1.1",
+    "mocha": "^6.2.2"
+  },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "fs-extra": "^8.1.0",
+    "openframe-extension": "^0.1.0",
+    "replace-in-file": "^4.2.0",
+    "request": "^2.88.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:jvolker/Openframe-Processing-JavaScript"
+  }
+}
