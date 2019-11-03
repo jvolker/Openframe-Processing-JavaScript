@@ -1,39 +1,39 @@
+
 # Openframe Processing JavaScript extension
 
-This extension runs interactive Processing sketches with JavaScript flavour on a [Raspberry Pi](https://www.raspberrypi.org/) within [Openframe](http://openframe.io) – "an open source platform for artists, curators and art enthusiasts to share, discover and display digital art". 
+This extension runs Processing JavaScript sketches on a [Raspberry Pi](https://www.raspberrypi.org/) within [Openframe](http://openframe.io)
+> an open source platform for artists, curators and art enthusiasts to share, discover and display digital art. 
 
-This extension works with [p5.js](https://p5js.org/) and [Processing.js](http://processingjs.org/) sketches which are a JavaScript-based interpretation and port of [Processing](http://processing.org) running in a browser. When JavaScript flavoured Processing artwork is selected in the Openframe web app, the artwork gets loaded in Chromium browser on the Raspberry Pi.
+When artwork of Processing Javascript format is selected in the Openframe web app, this extension takes care of downloading the artwork and loading it in the Chromium browser on the Raspberry Pi.
 
-This extension was built to support sketches on [OpenProcessing](http://openprocessing.org). Support is given for any JavaScript based Processing sketch on the platform. You can simply use the Openframe URL to load the artwork. For archived sketches of OpenProcessing (based on Java, not JavaScript) please have a look at https://github.com/jvolker/Openframe-Processing which might add support for those in the furture.
+It's mainly intended to work with [OpenProcessing.org](http://openprocessing.org). OpenProcessing.org hosts sketches based on [p5.js](https://p5js.org/) and [Processing.js](http://processingjs.org/). They are a JavaScript-based interpretation and port of [Processing](http://processing.org) running in a browser. Support for self-hosted [p5.js](https://p5js.org/) code/sketches might be added in the future.
 
 ## Installation
 
 ### Prerequisites
 
-Follow this guide: http://docs.openframe.io/frame-setup-guide/#4-extensions
+This extension currently requires a dev version of Openframe until [this](https://github.com/OpenframeProject/Openframe/pull/63) is implemented in the main fork of Openframe. 
 
 ### Instructions
-
-Then, enter via the command line: `openframe -i openframe-processing-javascript`
+1. Follow this Readme to install the required dev version of Openframe: https://github.com/jvolker/Openframe
+2. Then, enter via the command line: `openframe -i openframe-processing-javascript`
 
 ## Artwork
 
 ### How to upload artwork?
 
-First, follow the Openframe guide on how to set up an Openframe and to display artwork: http://docs.openframe.io/frame-setup-guide/
-
 Then, in the [web app](https://openframe.io/stream)  
 1. Click `Add Artwork`
 2. Make sure you give your artwork a title 
 3. Use `openframe-processing-javascript` as artwork format
-4. Enter the URL to your artwork into the field `URL where the artwork is hosted`. So far it supports URLs to JavaScript based sketches of the Openprocessing platform.
-5. Optionally enter a URL to a preview image of the sketch which is especially useful if you like to publish your artwork.
+4. Enter the URL to the sketch on OpenProcessing.org into the field `URL where the artwork is hosted`.
+5. Optionally enter a URL to a preview image of the sketch which is especially useful if you like to publish your sketch on the Openframe stream.
 6. Select the artwork by clicking the `push to frame` button.
 
 
 ### Fullscreen
 
-The extension loads all sketches in fullscreen by default. For some sketches this might not be useful. To disable fullscreen, add the following to the `options` property of the artwork in the database: 
+The extension loads all sketches in fullscreen by default. For some sketches, this might not be useful. To disable fullscreen, add the following to the `options` property of the artwork in the database: 
 
 ```
 {
@@ -41,23 +41,33 @@ The extension loads all sketches in fullscreen by default. For some sketches thi
 }
 ```
 
-The Openframe web app currently doesn't support this. But it's possible with the [API explorer](https://api.openframe.io/explorer/).
+The Openframe web app currently doesn't support adding options to artworks. But it's possible with the [API explorer](https://api.openframe.io/explorer/).
 
-### Where to host artwork?
+### Sketches not hosted on Openprocessing.org
 
-Currently, you have to upload your artwork to a publicly reachable webspace. If you don't have a webspace/server you could, as one out of many options, try Dropbox. Once it's uploaded to Dropbox, use the `Copy Dropbox Link`. You will end up with a URL like this `https://www.dropbox.com/s/vb17ehsdfqp2bjd/290317.jpg?dl=0`. Change the 0 at the end to 1 like this `https://www.dropbox.com/s/vb17ehsdfqp2bjd/290317.jpg?dl=1`, and you will be able to use the URL for Openframe.
+Openprocessing.org provides an excellent environment to develop, test and host sketches using different versions of [p5.js](https://p5js.org/) (and [Processing.js](http://processingjs.org/), which itself has been archived in Dec 2018).
+
+That said, it is possible to run sketches from other sources with a little effort. If for some reason you like to run browser-based Processing sketches not hosted on [OpenProcessing](http://openprocessing.org) this might help you:
+1. Have a look at the [HTML template of this extension](https://github.com/jvolker/Openframe-Processing-JavaScript/blob/master/scripts/index.html.tpl) is using to run sketches.
+2. Copy and modify it to your needs.
+3. Run it using the Openframe-Website extension which is installed by default.
+
+### Archived sketches
+
+Openprocessing.org has been around since 2008. In those early days of Processing, there were no JavaScript-based flavours of Processing available. That’s why these older sketches are based on the original version of Processing written in Java. As the underlying technology is already provided by the [Openframe-Processing extension](https://github.com/jvolker/Openframe-Processing), it might add proper support for these archived sketches in the future.
 
 ## Todo
 
-- support for p5.js and processing.js sketches not hosted on openprocessing.org 
 - fullscreen
+- notice for archived sketches
+- support for p5.js sketches not hosted on openprocessing.org 
 - hide cursor at all times (even when the mouse is moved)
 - add unit tests
 
 ## Thanks
 
-Thanks to Jonathan Wohl and Isaac Bertran for this amazing project
+Thanks to Jonathan Wohl and Isaac Bertran for initiating Openframe.
+Thanks to Sinan of [OpenProcessing.org](http://openprocessing.org) for support during the development of this extension and updates on the Openprocessing API.
 
 *Author*
-[Jeremias Volker](http://www.jeremiasvolker.com)  
-Twitter (@jeremiasvolker)(http://twitter.com/jeremiasvolker)
+[Jeremias Volker](http://www.jeremiasvolker.com) | Twitter:  [@jeremiasvolker](http://twitter.com/jeremiasvolker)
