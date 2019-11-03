@@ -9,6 +9,10 @@ const url = require('url')
 const request = require('request')
 const fs = require('fs-extra')
 const replace = require('replace-in-file')
+
+const requestPromised = require('request-promise-native')
+const writeFilePromised = require('fs-writefile-promise')
+
     
 
 /**
@@ -100,8 +104,23 @@ function prepareSketch(artworkURL) {
     // TODO: promise !!!
 
   }))
+  
+  promises.push(requestJSON('https://www.openprocessing.org/sketch/' + sketch.id + '/files').then(result => {
+    sketch.files = result.object
+    
+    let sketchFilePromises = []
+    for (let file of sketch.files) {    
 
-
+      sketchFilePromises.push(
+        requestPromised({
+          url: 'https://www.openprocessing.org/sketch/' + sketch.id + '/files/' + file.name,
+          encoding: null
+        })
+        .then(data => writeFilePromised('scripts/' + file.name, data))
+      )
+    }
+    return Promise.all(sketchFilePromises)
+  }))
 
   Promise.all(promises).then(function(result) { 
     console.log("done")
