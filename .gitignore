@@ -5,8 +5,8 @@ artwork/
 npm-debug.log
 coverage/*
 player/*
-index.html
-!index.html.tpl
+.xinitrc
+!.xinitrc.tpl
 
 ### macOS ###
 # General

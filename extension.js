@@ -5,16 +5,18 @@ var pjson = require('./package.json'),
     debug = require('debug')('openframe-processing-javascript');
     
     
-const url = require('url')
-const request = require('request')
-const fs = require('fs-extra')
-const replace = require('replace-in-file')
+const url = require('url'),
+      path = require('path'),
+      request = require('request'),
+      fs = require('fs-extra'),
+      replace = require('replace-in-file');
 
 const requestPromised = require('request-promise-native')
 const writeFilePromised = require('fs-writefile-promise')
 
+let tmpDir = '/tmp/'
+let scriptsPath = path.join(__dirname, 'scripts')
     
-
 /**
  * Extensions should expose an instance of the Extension class.
  *
@@ -27,18 +29,30 @@ module.exports = new Extension({
         // this is what might get displayed to users (not currently used)
         'display_name': 'Processing JavaScript',
         'download': false,
-        'start_command': function(args, tokens) {
-            // 1. clone template .xinitrc
-            // var filePath = _cloneTemplate(this.xinitrcTplPath),
-            //     // 2. parse options from args into tokens
-            //     _tokens = _extendTokens(args, tokens);
-            // // 3. replace tokens in .xinitrc
-            // _replaceTokens(filePath, _tokens);
-            // 4. return xinit
+        'start_command': function(options, tokens) {
+          // return new Promise(function(resolve, reject) {
+
+            return prepareSketch(tokens['$url']).then(sketchPath => {
+              tokens['$sketchPath'] = sketchPath
+              debug('$sketchPath',tokens['$sketchPath'])
+              
+              try {
+                fs.copySync(path.join(scriptsPath, '.xinitrc.tpl'), path.join(scriptsPath, '.xinitrc'))
+                replace.sync({
+                  files: path.join(scriptsPath, '.xinitrc'),
+                  from: /\$sketchPath/g,
+                  to: tokens['$sketchPath'],
+                })
+              }
+              catch (error) {
+                console.error('Error occurred:', error)
+              }
+            }).then(() => {
+              return 'xinit '+ path.join(scriptsPath, '.xinitrc');
+              // return resolve(command)
+            })
             
-            prepareSketch(tokens['$url'])
-            
-            return 'xinit '+ __dirname + '/scripts/.xinitrc';
+          // })
         },
         'end_command': 'pkill -f X'
     },
@@ -66,9 +80,9 @@ function prepareSketch(artworkURL) {
   
   let sketch = {}
   
-  const scriptsPath = __dirname + '/scripts/'
   sketch.id = url.parse(artworkURL).pathname.split('/').pop()
-
+  const sketchPath = path.join(tmpDir,'OpenProcessing',sketch.id) 
+  fs.mkdirp(sketchPath)
 
   // get code and engineURL from API
   const promises = [];
@@ -77,9 +91,9 @@ function prepareSketch(artworkURL) {
     
     // replace engineURL in index.html
     try {
-      fs.copySync(scriptsPath + 'index.html.tpl', scriptsPath + 'index.html')
+      fs.copySync(path.join(scriptsPath, 'index.html.tpl'), path.join(sketchPath, 'index.html'))
       replace.sync({
-        files: scriptsPath + 'index.html',
+        files: path.join(sketchPath, 'index.html'),
         from: /\$engineURL/g,
         to: sketch.engineURL,
       })
@@ -99,7 +113,7 @@ function prepareSketch(artworkURL) {
     // TODO: inject fullscreen
 
     // replace sketch.js with code
-    fs.writeFile(scriptsPath +  'sketch.js', sketch.code, (err) => { if(err) console.log(err) })
+    fs.writeFile(path.join(sketchPath, 'sketch.js'), sketch.code, (err) => { if(err) console.log(err) })
 
     // TODO: promise !!!
 
@@ -116,15 +130,14 @@ function prepareSketch(artworkURL) {
           url: 'https://www.openprocessing.org/sketch/' + sketch.id + '/files/' + file.name,
           encoding: null
         })
-        .then(data => writeFilePromised('scripts/' + file.name, data))
+        .then(data => writeFilePromised(path.join(sketchPath,file.name), data))
       )
     }
     return Promise.all(sketchFilePromises)
   }))
 
-  Promise.all(promises).then(function(result) { 
-    console.log("done")
-    console.log(sketch)
-
+  return Promise.all(promises).then(function(result) { 
+    return sketchPath
+    // console.log("prepared sketch")
   })
 }
