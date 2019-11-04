@@ -58,9 +58,10 @@ Openprocessing.org has been around since 2008. In those early days of Processing
 
 ## Todo
 
-- fullscreen
+- cover/fit, force fullscreen, scale 
 - notice for archived sketches
 - support for p5.js sketches not hosted on openprocessing.org 
+- add support for emojis: https://www.openprocessing.org/sketch/771734
 - hide cursor at all times (even when the mouse is moved)
 - add unit tests
 
