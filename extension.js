@@ -103,6 +103,7 @@ function prepareSketch(artworkURL) {
   const promises = [];
   promises.push(requestJSON('https://www.openprocessing.org/api/sketch/' + sketch.id).then(result => {
     sketch.engineURL = result.sketch.engineURL
+    if (sketch.engineURL.indexOf('://') == -1) sketch.engineURL = 'https://www.openprocessing.org' + sketch.engineURL
     
     // replace engineURL in index.html
     try {
