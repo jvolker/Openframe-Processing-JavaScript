@@ -60,7 +60,7 @@ module.exports = new Extension({
                   // desktop mode
                   else {                    
                     var command = '/usr/bin/chromium --noerrdialogs --kiosk --incognito --allow-file-access-from-files '
-                    command += '"' + tokens['$sketchPath'] + '/index.html"'
+                    command += tokens['$sketchPath'] + '/index.html'
                     resolve(command); 
                   }                  
                 })
