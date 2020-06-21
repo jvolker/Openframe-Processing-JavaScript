@@ -36,7 +36,8 @@
     "openframe-extension": "^0.1.0",
     "replace-in-file": "^4.2.0",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.7"
+    "request-promise-native": "^1.0.7",
+    "ps-list": "^5.0.1"
   },
   "repository": {
     "type": "git",

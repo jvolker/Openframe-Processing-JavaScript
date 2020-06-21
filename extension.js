@@ -9,7 +9,8 @@ const url = require('url'),
       path = require('path'),
       request = require('request'),
       fs = require('fs-extra'),
-      replace = require('replace-in-file');
+      replace = require('replace-in-file'),
+      psList = require('ps-list');
 
 const requestPromised = require('request-promise-native')
 const writeFilePromised = require('fs-writefile-promise')
@@ -30,31 +31,45 @@ module.exports = new Extension({
         'display_name': 'Processing JavaScript',
         'download': false,
         'start_command': function(options, tokens) {
-          // return new Promise(function(resolve, reject) {
-
-            return prepareSketch(tokens['$url']).then(sketchPath => {
-              tokens['$sketchPath'] = sketchPath
-              debug('$sketchPath',tokens['$sketchPath'])
-              
-              try {
-                fs.copySync(path.join(scriptsPath, '.xinitrc.tpl'), path.join(scriptsPath, '.xinitrc'))
-                replace.sync({
-                  files: path.join(scriptsPath, '.xinitrc'),
-                  from: /\$sketchPath/g,
-                  to: tokens['$sketchPath'],
-                })
-              }
-              catch (error) {
-                console.error('Error occurred:', error)
-              }
-            }).then(() => {
-              return 'xinit '+ path.join(scriptsPath, '.xinitrc');
-              // return resolve(command)
-            })
+          return new Promise(function(resolve, reject) {
+            // is X server running?
+            psList().then(function(processes) {
+                processes = processes.filter(function(process) { process.name.indexOf('Xorg') > -1; });
+                let commandLineMode = processes.length > 0;
             
-          // })
+                prepareSketch(tokens['$url']).then(sketchPath => {
+                  tokens['$sketchPath'] = sketchPath
+                  debug('$sketchPath',tokens['$sketchPath'])
+                  
+                  try {
+                    fs.copySync(path.join(scriptsPath, '.xinitrc.tpl'), path.join(scriptsPath, '.xinitrc'))
+                    replace.sync({
+                      files: path.join(scriptsPath, '.xinitrc'),
+                      from: /\$sketchPath/g,
+                      to: tokens['$sketchPath'],
+                    })
+                  }
+                  catch (error) {
+                    console.error('Error occurred:', error)
+                  }
+                }).then(() => {
+                  // command line mode
+                  if (commandLineMode) {
+                    resolve('xinit '+ path.join(scriptsPath, '.xinitrc'));
+                  }
+                  // desktop mode
+                  else {                    
+                    var command = '/usr/bin/chromium --noerrdialogs --kiosk --incognito --allow-file-access-from-files '
+                    command += '"' + _tokens['$sketchPath'] + '/index.html"'
+                    resolve(command); 
+                  }                  
+                })
+            });
+  
+          })
         },
-        'end_command': 'pkill -f X'
+        // 'end_command': 'pkill -f X',
+        'end_command': 'pkill -f chromium', // TODO: kill x server in command line mode
     },
 });
 
