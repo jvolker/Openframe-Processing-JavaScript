@@ -12,24 +12,21 @@ It's mainly intended to work with [OpenProcessing.org](http://openprocessing.org
 
 ### Prerequisites
 
-This extension currently requires a dev version of Openframe until [this](https://github.com/OpenframeProject/Openframe/pull/63) is implemented in the main fork of Openframe. 
+Follow the official guide https://docs.openframe.io/#getting-started to install Openframe. 
+
+This extension requires Openframe `v0.4.12` or higher.
 
 ### Instructions
-1. Follow this Readme to install the required dev version of Openframe: https://github.com/jvolker/Openframe
-2. Then, enter via the command line: `openframe -i openframe-processing-javascript`
+
+Then, enter via the command line: `openframe -i openframe-processing-javascript`
 
 ## Artwork
 
 ### How to upload artwork?
 
-Then, in the [web app](https://openframe.io/stream)  
-1. Click `Add Artwork`
-2. Make sure you give your artwork a title 
-3. Use `openframe-processing-javascript` as artwork format
-4. Enter the URL to the sketch on OpenProcessing.org into the field `URL where the artwork is hosted`.
-5. Optionally enter a URL to a preview image of the sketch which is especially useful if you like to publish your sketch on the Openframe stream.
-6. Select the artwork by clicking the `push to frame` button.
+Follow the [adding artwork section](https://docs.openframe.io/#adding-artwork) of the Openframe docs and use `openframe-processing-javascript` as artwork format.
 
+Enter the URL to the sketch on OpenProcessing.org into the field `URL where the artwork is hosted`.
 
 ### Fullscreen
 
@@ -41,7 +38,7 @@ The extension loads all sketches in fullscreen by default. For some sketches, th
 }
 ```
 
-The Openframe web app currently doesn't support adding options to artworks. But it's possible with the [API explorer](https://api.openframe.io/explorer/).
+The Openframe web app currently doesn't support this. Alternative ways to do this are [described in the Openframe docs](https://docs.openframe.io/#per-artwork-settings).
 
 ### Sketches not hosted on Openprocessing.org
 
@@ -54,7 +51,7 @@ That said, it is possible to run sketches from other sources with a little effor
 
 ### Archived sketches
 
-Openprocessing.org has been around since 2008. In those early days of Processing, there were no JavaScript-based flavours of Processing available. That’s why these older sketches are based on the original version of Processing written in Java. As the underlying technology is already provided by the [Openframe-Processing extension](https://github.com/jvolker/Openframe-Processing), it might add proper support for these archived sketches in the future.
+Openprocessing.org has been around since 2008. In those early days of Processing, there were no JavaScript-based flavours of Processing available. That’s why these older sketches are based on the original version of Processing written in Java. As the underlying technology is already provided by the [Openframe-Processing extension](https://github.com/jvolker/Openframe-Processing), it might receive proper support for these archived sketches in the future.
 
 ## Todo
 
